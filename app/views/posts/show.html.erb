@@ -1,0 +1,89 @@
+<div>
+  <%= link_to gravatar_for(@post.user, size: 50), @post.user %>
+  <span class="user"><%= link_to @post.user.name, @post.user %></span>
+</div>
+<div>
+  <span class="timestamp">
+	Posted <%= @post.created_at %>.
+  </span>
+</div>
+<br>
+<div>
+	<span class="content">
+		<%= @post.content %>
+  </span>
+  <br>
+  <%= image_tag @post.image if @post.image.attached? %>
+</div>
+<br>
+<div>
+	<b> Likes:<%= @post.likes.count %> Comments:<%= @post.comments.count %> </b>
+</div>
+<div>
+<span>
+	<% like = current_user.likes.find_by(post: @post) %>
+	<% if like.nil? %>
+	  <form action="/likes" method="post" id="likeform">
+		  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+		  <input type="hidden" name="like[post_id]" value="<%= @post.id %>">
+	  </form>
+	  <button type="submit" form="likeform" value="Submit" id="likebtn" style="color:black;"> Like <i class="fa fa-thumbs-up"></i></button>
+	<% else %>
+	  <form action="<%= like_path(like) %>" method="post" id="unlikeform">
+		  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+		  <input type="hidden" name="_method" value="DELETE">
+	  </form>
+	  <button type="submit" form="unlikeform" value="Submit" id="likebtn" style="color:blue;"> Like <i class="fa fa-thumbs-up"></i></button>
+	<% end %>
+  <button id="btn1"> Add Comment <i class='far fa-comment-alt'></i></button>
+</span>
+<div class="card my-1" id="commentbox"> 
+  <div class="card-body">
+    <%= form_for [@post, @post.comments.build], :remote => true do |f| %>
+      <div class="form-group">
+        <%= f.label 'New comment' %>
+        <%= f.text_area :content, class: 'form-control' %>
+      </div>
+      <%= f.submit 'Submit', class: 'btn btn-primary' %>
+    <% end %>
+  </div>
+</div>
+</div>
+<br>
+<div>
+	<b> Comments </b>
+	<% if @post.comments.count != 0 %>
+	  <ol class="microposts">
+	  	<li id="comments"></li>
+      <%= render @post.comments %>
+    </ol>
+  <% end %>
+</div>
+<script>
+$(document).ready(function(){
+	var signal = false;
+	var like = false;
+	$("#commentbox").hide();
+  $("#btn1").click(function(){
+    if (signal == false) {
+    	$("#commentbox").show();
+    	signal = true;
+    } else {
+    	$("#commentbox").hide();
+    	signal = false;
+    }
+  });
+
+  $("#likebtn").click(function(){
+    if (like == false) {
+    	document.getElementById("likebtn").style.color = "blue";
+    	like = true;
+    } else {
+    	document.getElementById("likebtn").style.color = "black";
+    	like = false;
+    }
+  });
+
+});
+
+</script>

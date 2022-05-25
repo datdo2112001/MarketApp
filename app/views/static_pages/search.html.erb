@@ -1,0 +1,8 @@
+<% if @posts.any? %>
+	<ol class="microposts">
+		<%= render @posts %>
+	</ol>
+	<%= will_paginate @posts %>
+<% else %>
+ <p> Sorry, we don't have item you need </p>
+<% end %>

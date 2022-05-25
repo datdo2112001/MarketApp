@@ -1,0 +1,56 @@
+<% provide(:title, "Home") %>
+
+<% if !user_signed_in? %>
+	<div class="center jumbotron">
+		<h1>Welcome to the Good Market App</h1>
+
+		<%= link_to "Sign up now!", new_user_registration_path , class: "btn btn-lg btn-primary" %>
+		<br>
+	</div>
+	<div>
+		<%= link_to image_tag("mercedes.jpg", alt: "Rails logo", width: "185", height: "200") %>
+		<%= link_to image_tag("phone.jpg", alt: "Rails logo", width: "185", height: "200") %>
+		<%= link_to image_tag("dogiadung.jpg", alt: "Rails logo", width: "185", height: "200") %>
+		<%= link_to image_tag("donoithat.jpg", alt: "Rails logo", width: "185", height: "200") %>
+		<%= link_to image_tag("thoitrang.jpg", alt: "Rails logo", width: "185", height: "200") %>
+		<%= link_to image_tag("mypham.jpg", alt: "Rails logo", width: "185", height: "200") %>
+	</div>
+<% else %>
+	<div class="row">
+		<aside class="col-md-4">
+				<form action="/filter" id="form1">
+					<input name="authenticity_token" type="hidden" value="J7CBxfHalt49OSHp27hblqK20c9PgwJ108nDHX/8Cts=" />
+					<label for="type">Choose type of item you need:</label>
+					<select name="field" id="type" form="form1">
+  					<option value="Cars">Cars</option>
+  					<option value="electronice device">Electronice device</option>
+  					<option value="furniture">Furniture</option>
+  					<option value="Pet">Pet</option>
+  					<option value="fashion">Fasion</option>
+  					<option value="real estate">Real estate</option>
+  					<option value="Other">Others</option>
+					</select>
+  				<input type="submit" value="Find">
+				</form>
+		</aside>
+		<div class="col-md-8">
+			<form action="/search" id="form2">
+				<input name="authenticity_token" type="hidden" value="J7CBxfHalt49OSHp27hblqK20c9PgwJ108nDHX/8Cts=" />
+				<label for="site-search">Search:</label>
+				<input type="search" id="site-search" name="keyword">
+			</form>
+			<button type="submit" form="form2">Search</button>
+		</div>
+	</div>
+	<div scope="row">
+		<h3>Post for you</h3>
+		<%= render 'shared/feed' %>
+		<h3> Other </h3>
+		<% if @posts.any? %>
+			<ol class="microposts">
+				<%= render @posts %>
+			</ol>
+			<%= will_paginate @posts %>
+		<% end %>
+	</div>
+<% end %>
